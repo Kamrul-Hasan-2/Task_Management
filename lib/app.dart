@@ -21,6 +21,7 @@ class TaskManagement extends StatelessWidget {
   ElevatedButtonThemeData _elevatedButtonThemeData(){
     return ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           backgroundColor: const Color(0xFF2491EB),
           shape: RoundedRectangleBorder(
