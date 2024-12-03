@@ -59,6 +59,61 @@ class NetworkCaller {
     }
   }
 
+  static Future<NetworkResponse> postStreamRequest({
+    required String url,
+    Map<String, String>? body,
+    Map<String, String>? headers,
+    Map<String, String>? files,
+  }) async {
+    try {
+      // Create a MultipartRequest
+      var request = MultipartRequest('POST', Uri.parse(url));
+
+      // Add fields to the request (if any)
+      if (body != null) {
+        request.fields.addAll(body);
+      }
+
+      // Add files to the request (if any)
+      if (files != null) {
+        files.forEach((key, value) async {
+          var file = await MultipartFile.fromPath(key, value);
+          request.files.add(file);
+        });
+      }
+
+      // Set headers (if any)
+      if (headers != null) {
+        request.headers.addAll(headers);
+      }
+
+      // Send the request
+      var streamedResponse = await request.send();
+
+      // Handle the response
+      if (streamedResponse.statusCode == 200) {
+        var responseString = await streamedResponse.stream.bytesToString();
+        return NetworkResponse(
+          isSuccess: true,
+          statusCode: streamedResponse.statusCode,
+          errorMessage: responseString,
+        );
+      } else {
+        return NetworkResponse(
+          isSuccess: false,
+          statusCode: streamedResponse.statusCode,
+          errorMessage: streamedResponse.reasonPhrase ?? 'Unknown error',
+        );
+      }
+    } catch (e) {
+      return NetworkResponse(
+        isSuccess: false,
+        statusCode: -1,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
   static NetworkResponse _handleResponse(Response response) {
     if (response.statusCode == 200) {
       return NetworkResponse(

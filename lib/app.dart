@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_management/controller_binder.dart';
 import 'ui/home/splash_screen.dart';
 
 class TaskManagement extends StatelessWidget {
@@ -12,6 +13,7 @@ class TaskManagement extends StatelessWidget {
         inputDecorationTheme: _inputDecorationTheme(),
         elevatedButtonTheme: _elevatedButtonThemeData()
       ),
+      initialBinding: ControllerBinder(),
       home: const SplashScreen(),
     );
   }
