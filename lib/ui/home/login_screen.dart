@@ -185,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (result) {
         snackBarMessage(context, 'Login Successful');
-        Get.to(const HomeScreen());
+        Get.to(HomeScreen());
         // Navigate to the next screen if needed
       } else {
         snackBarMessage(context, _loginController.errorMessage ?? 'Login Failed',
