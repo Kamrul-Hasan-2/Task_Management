@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:task_management/ui/controller/auth_controller.dart';
+import 'package:task_management/ui/home/home_screen.dart';
 import 'package:task_management/ui/home/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,7 +21,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _nextScreenMove() async {
     await Future.delayed(const Duration(seconds: 3));
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+    await AuthController.getAccessToken();
+    if(AuthController.isLoggedIn()){
+      Get.off(const HomeScreen());
+    }else{
+      Get.off(const LoginScreen());
+    }
+
   }
 
   @override
