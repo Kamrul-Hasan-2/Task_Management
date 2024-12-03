@@ -119,13 +119,15 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
     );
 
     if (result) {
-      _shouldRefreshPrevious = true;
+      _shouldRefreshPrevious = true; // Indicate that refresh is needed
       _clearTextField();
-      snackBarMessage(context, 'New Task Add!');
+      snackBarMessage(context, 'New Task Added!');
+      Get.back(result: _shouldRefreshPrevious); // Pass result back to HomeScreen
     } else {
       snackBarMessage(context, _addNewTaskController.errorMessage!, true);
     }
   }
+
 
   void _clearTextField() {
     _titleTEController.clear();

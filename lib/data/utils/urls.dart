@@ -3,5 +3,8 @@ class Urls{
   static const String login = '$_baseUrl/user/login';
   static const String registration = '$_baseUrl/user/register';
   static const String createTask = '$_baseUrl/task/create-task';
-
+  static const String getTask = '$_baseUrl/task/get-all-task';
+  static String deleteTask(String taskId) {
+    return '$_baseUrl/task/delete-task/$taskId';
+  }
 }
