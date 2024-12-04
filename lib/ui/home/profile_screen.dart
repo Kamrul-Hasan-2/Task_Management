@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:task_management/data/model/user_data.dart';
 import 'package:task_management/data/service/network_caller.dart';
 import 'package:task_management/data/utils/urls.dart';
 import 'package:task_management/ui/controller/auth_controller.dart';
+import 'package:task_management/ui/controller/profile_controller.dart';
 import 'package:task_management/ui/widget/snack_bar_message.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -24,6 +27,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _updateProfileInProgress = false;
   XFile? _selectedImage;
 
+  final profileController = Get.find<ProfileController>();
+
   @override
   void initState() {
     super.initState();
@@ -31,11 +36,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _setUserData() {
+    final profileController = Get.find<ProfileController>();
     // Pre-fill the form with user data from AuthController
-    _emailTEController.text = AuthController.userData?.email ?? '';
-    _firstNameTEController.text = AuthController.userData?.firstName ?? '';
-    _lastNameTEController.text = AuthController.userData?.lastName ?? '';
-    _addressTEController.text = AuthController.userData?.lastName ?? '';
+    _emailTEController.text = profileController.userData?.email ?? '';
+    _firstNameTEController.text = profileController.userData?.firstName ?? '';
+    _lastNameTEController.text = profileController.userData?.lastName ?? '';
+    _addressTEController.text = profileController.userData?.lastName ?? '';
   }
 
   @override
@@ -171,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
 
     try {
-      Map<String, dynamic> requestBody = {
+      Map<String, String> requestBody = {
         "email": _emailTEController.text,
         "firstName": _firstNameTEController.text,
         "lastName": _lastNameTEController.text,
@@ -186,14 +192,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         List<int> imageBytes = await _selectedImage!.readAsBytes();
         requestBody['photo'] = base64Encode(imageBytes);
       }
+      Map<String, String>? files;
+      if (_selectedImage != null) {
+        files = {'file': _selectedImage!.path};
+      }
 
-      final response = await NetworkCaller.patchRequest(
+      final response = await NetworkCaller.patchStreamRequest(
         url: Urls.userProfile,
         body: requestBody,
+        files: files,
       );
 
       if (response.isSuccess) {
         snackBarMessage(context, 'Profile updated successfully!');
+        profileController.setUserData(UserData.fromJson(response.responseData['data']));
       } else {
         snackBarMessage(context, response.errorMessage, true);
       }

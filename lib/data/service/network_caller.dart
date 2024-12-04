@@ -114,6 +114,64 @@ class NetworkCaller {
     }
   }
 
+  static Future<NetworkResponse> patchStreamRequest({
+    required String url,
+    Map<String, String>? body,
+    Map<String, String>? files,
+  }) async {
+    try {
+      // Create a MultipartRequest for PATCH
+      var request = MultipartRequest('PATCH', Uri.parse(url));
+
+      // Add fields to the request (if any)
+      if (body != null) {
+        request.fields.addAll(body);
+      }
+
+      // Add files to the request (if any)
+      if (files != null) {
+        for (var entry in files.entries) {
+          var file = await MultipartFile.fromPath(entry.key, entry.value);
+          request.files.add(file);
+        }
+      }
+
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${AuthController.accessToken ?? ''}',
+      };
+
+      request.headers.addAll(headers);
+
+      // Send the request
+      var streamedResponse = await request.send();
+
+      // Handle the response
+      if (streamedResponse.statusCode >= 200 && streamedResponse.statusCode < 300) {
+        var responseString = await streamedResponse.stream.bytesToString();
+        return NetworkResponse(
+          isSuccess: true,
+          statusCode: streamedResponse.statusCode,
+          responseData: responseString,
+        );
+      } else {
+        return NetworkResponse(
+          isSuccess: false,
+          statusCode: streamedResponse.statusCode,
+          errorMessage: streamedResponse.reasonPhrase ?? 'Unknown error',
+        );
+      }
+    } catch (e) {
+      debugPrint('PATCH Stream Request Error: $e');
+      return NetworkResponse(
+        isSuccess: false,
+        statusCode: -1,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+
   static NetworkResponse _handleResponse(Response response) {
     if (response.statusCode == 200) {
       return NetworkResponse(
