@@ -33,63 +33,65 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      "Register",
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF2491EB),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Text(
+                        "Register",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2491EB),
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "Create an account to get started.",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
+                      const SizedBox(height: 8),
+                      const Text(
+                        "Create an account to get started.",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 32),
-                    _buildRegistrationFormSection(),
-                    const SizedBox(height: 24),
-                    GetBuilder<RegistrationController>(builder: (controller) {
-                      return Visibility(
-                        visible: !controller.inProgress,
-                        replacement: const Center(child: CircularProgressIndicator()),
-                        child: ElevatedButton(
-                          onPressed: _moveToLoginScreen,
-                          child: const Text(
-                            "Sign up",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                      const SizedBox(height: 32),
+                      _buildRegistrationFormSection(),
+                      const SizedBox(height: 24),
+                      GetBuilder<RegistrationController>(builder: (controller) {
+                        return Visibility(
+                          visible: !controller.inProgress,
+                          replacement: const Center(child: CircularProgressIndicator()),
+                          child: ElevatedButton(
+                            onPressed: _moveToLoginScreen,
+                            child: const Text(
+                              "Sign up",
+                              style: TextStyle(color: Colors.white, fontSize: 16),
+                            ),
                           ),
-                        ),
-                      );
-                    }),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Already have an account?",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Get.off(const LoginScreen());
-                          },
-                          child: const Text(
-                            "Log in",
-                            style: TextStyle(color: Color(0xFF2491EB)),
+                        );
+                      }),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Already have an account?",
+                            style: TextStyle(color: Colors.grey),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          TextButton(
+                            onPressed: () {
+                              Get.off(const LoginScreen());
+                            },
+                            child: const Text(
+                              "Log in",
+                              style: TextStyle(color: Color(0xFF2491EB)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
