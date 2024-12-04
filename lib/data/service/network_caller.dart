@@ -161,6 +161,39 @@ class NetworkCaller {
   }
 
 
+  static Future<NetworkResponse> patchRequest({
+    required String url,
+    Map<String, dynamic>? body,
+  }) async {
+    try {
+      Uri uri = Uri.parse(url);
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${AuthController.accessToken ?? ''}',
+      };
+
+      printRequest(url, body, headers);
+
+      final Response response = await patch(
+        uri,
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      printResponse(url, response);
+      return _handleResponse(response);
+    } catch (e) {
+      debugPrint('PATCH Request Error: $e');
+      return NetworkResponse(
+        isSuccess: false,
+        statusCode: -1,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+
+
   static void printRequest(
       String url, Map<String, dynamic>? body, Map<String, String> headers) {
     debugPrint('Request URL: $url');

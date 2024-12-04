@@ -29,6 +29,7 @@ class LoginController extends GetxController {
     if (response.isSuccess) {
       final String token = response.responseData['data']['token'] ?? " ";
       await AuthController.saveAccessToken(token);
+      await AuthController.saveUserData(response.responseData['data']['user']);
       isSuccess = true;
     } else {
       _errorMessage = response.errorMessage;

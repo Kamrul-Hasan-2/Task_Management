@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task_management/data/model/user_data.dart';
 
 class AuthController {
   static const String _accessTokenKey = 'access-token';
   static const String _userDataKey = 'user-data';
   static String? accessToken;
+  static UserData? userData;
 
   // Save the access token
   static Future<void> saveAccessToken(String token) async {
@@ -39,6 +41,7 @@ class AuthController {
   static Future<void> saveUserData(Map<String, dynamic> userData) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setString(_userDataKey, jsonEncode(userData));
+    print("User data saved: $userData");
   }
 
   // Retrieve user data (optional)

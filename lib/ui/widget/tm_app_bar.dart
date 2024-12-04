@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_management/ui/controller/auth_controller.dart';
+import 'package:task_management/ui/controller/profile_controller.dart';
 import 'package:task_management/ui/home/login_screen.dart';
 import 'package:task_management/ui/home/profile_screen.dart';
+
+import '../../data/utils/urls.dart';
 
 class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isProfileScreenOpen;
@@ -25,38 +29,47 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
             MaterialPageRoute(builder: (context) => const ProfileScreen()),
           );
         },
-        child: const Row(
-          children: [
-            CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: Colors.blue),
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'User Name',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    'user@example.com',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+        child: GetBuilder<ProfileController>(builder: (controller) {
+          return Row(
+            children: [
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.white,
+                backgroundImage: controller.userData?.image == null
+                    ? null
+                    : NetworkImage(
+                        Urls.baseUrl + "/" + (controller.userData?.image ?? ''),
+                      ),
+                child: controller.userData?.image == null
+                    ? const Icon(Icons.person, color: Colors.blue)
+                    : null,
               ),
-            ),
-          ],
-        ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      controller.userData?.fullName ?? ' ',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      controller.userData?.email ?? ' ',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }),
       ),
       actions: [
         IconButton(
@@ -67,7 +80,7 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
               MaterialPageRoute(
                 builder: (context) => const LoginScreen(),
               ),
-                  (route) => false,
+              (route) => false,
             );
           },
           icon: const Icon(Icons.logout),
